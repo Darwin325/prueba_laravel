@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Producto;
 use App\Http\Requests\StoreProductoRequest;
 use App\Http\Requests\UpdateProductoRequest;
+use App\Models\Vendedor;
 
-class ProductoController extends Controller
+class ProductoController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +16,7 @@ class ProductoController extends Controller
      */
     public function index()
     {
-        return response()->json(Producto::all(), 200);
+        return $this->showAll(Producto::all());
     }
 
     /**
