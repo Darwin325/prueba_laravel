@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Producto;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateProductoRequest extends FormRequest
 {
@@ -13,7 +15,7 @@ class UpdateProductoRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +26,13 @@ class UpdateProductoRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'nombre' => 'string',
+            'descripcion' => 'string',
+            'foto' => 'image',
+            'cantidad' => 'integer',
+            'precio' => 'integer',
+            'iva' => ['integer', Rule::in(Producto::IVA)],
+            'vendedor_id' => 'exists:App\Models\Vendedor,id'
         ];
     }
 }

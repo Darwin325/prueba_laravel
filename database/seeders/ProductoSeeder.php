@@ -17,7 +17,7 @@ class ProductoSeeder extends Seeder
     public function run()
     {
         Producto::factory(10)->create([
-           'foto' => asset(Storage::url('foto.jpg'))
+           'foto' => 'productos/foto.jpg'
         ]);
     }
 }

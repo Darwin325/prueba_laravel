@@ -23,6 +23,7 @@ return new class extends Migration
             $table->integer('iva');
             $table->unsignedBigInteger('vendedor_id');
             $table->foreign('vendedor_id')->references('id')->on('users');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
