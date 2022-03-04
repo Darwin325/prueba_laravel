@@ -15,7 +15,29 @@ class VentaController extends ApiController
      */
     public function index()
     {
-
+        $ventas = Venta::with('productos')->get()->map(function ($venta) {
+            $cliente = $venta->cliente;
+            $productos = $venta->productos->map(function ($producto){
+                return [
+                    'nombre' => $producto->nombre,
+                    'cantidad' => $producto->cantidad,
+                    'valor_unitario' => $producto->precio,
+                    'iva' => $producto->iva,
+                    'valor_total' => $producto->precio_con_iva()
+                ];
+            });
+            $valor_total_venta = round($productos->sum('valor_total'), 2);
+            return [
+                'numero_venta' => $venta->id,
+                'cliente_id' => $cliente->id,
+                'cliente' => $cliente->name,
+                'telefono' => $cliente->telefono,
+                'email' => $cliente->email,
+                'total_venta' => $valor_total_venta,
+                'productos' => $productos
+            ];
+        });
+        return $this->showAll($ventas);
     }
 
     /**

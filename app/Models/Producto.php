@@ -48,4 +48,9 @@ class Producto extends Model
             set: fn($valor) => strtolower($valor)
         );
     }
+
+    public function precio_con_iva()
+    {
+        return round(($this->precio * (($this->iva / 100) + 1)), 2);
+    }
 }
