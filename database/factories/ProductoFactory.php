@@ -24,9 +24,10 @@ class ProductoFactory extends Factory
         ];
         return [
             'nombre' => collect($productos)->random(),
-            'descipcion' => $this->faker->paragraph,
+            'descripcion' => $this->faker->paragraph,
             'foto' => $this->faker->url,
             'precio' => $this->faker->randomNumber(5),
+            'cantidad' => $this->faker->numberBetween(1, 50),
             'iva' => collect([15,19,21])->random(),
             //Solo son vendedores los primeros dos usuarios
             'vendedor_id' => collect([1,2])->random()
