@@ -14,10 +14,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+/*Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
-});
+});*/
 
 # Rutas para los productos
 Route::resource('productos', \App\Http\Controllers\ProductoController::class)
+    ->except(['create', 'edit']);
+
+Route::resource('ventas', \App\Http\Controllers\VentaController::class)
     ->except(['create', 'edit']);

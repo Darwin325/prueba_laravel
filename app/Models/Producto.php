@@ -21,6 +21,11 @@ class Producto extends Model
         return $this->belongsTo(Vendedor::class);
     }
 
+    public function ventas()
+    {
+        return $this->belongsToMany(Venta::class)->withTimestamps();
+    }
+
     public function nombre(): Attribute
     {
         return new Attribute(

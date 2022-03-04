@@ -6,7 +6,7 @@ use App\Models\Venta;
 use App\Http\Requests\StoreVentaRequest;
 use App\Http\Requests\UpdateVentaRequest;
 
-class VentaController extends Controller
+class VentaController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -15,17 +15,7 @@ class VentaController extends Controller
      */
     public function index()
     {
-        //
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -46,17 +36,6 @@ class VentaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(Venta $venta)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Venta  $venta
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Venta $venta)
     {
         //
     }

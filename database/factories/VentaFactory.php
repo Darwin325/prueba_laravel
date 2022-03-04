@@ -21,7 +21,6 @@ class VentaFactory extends Factory
         return [
             // Todos son clientes excepto los usuarios 1 y 2 que son vendedores
             'cliente_id' => User::all()->except([1,2])->random(),
-            'producto_id' => Producto::all()->random()->id
         ];
     }
 }

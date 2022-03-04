@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Producto;
 use App\Models\User;
 use App\Models\Venta;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -18,6 +19,10 @@ class DatabaseSeeder extends Seeder
     {
         User::factory(7)->create();
         $this->call(ProductoSeeder::class);
-        Venta::factory(15)->create();
+        Venta::factory(15)->create()
+            ->each(function ($venta) {
+                $productos = Producto::all()->random(mt_rand(1,3))->pluck('id');
+                $venta->productos()->attach($productos);
+            });
     }
 }
