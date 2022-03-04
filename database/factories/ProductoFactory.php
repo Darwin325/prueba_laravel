@@ -28,7 +28,8 @@ class ProductoFactory extends Factory
             'foto' => $this->faker->url,
             'precio' => $this->faker->randomNumber(5),
             'iva' => collect([15,19,21])->random(),
-            'vendedor_id' => User::all()->random()->id
+            //Solo son vendedores los primeros dos usuarios
+            'vendedor_id' => collect([1,2])->random()
         ];
     }
 }

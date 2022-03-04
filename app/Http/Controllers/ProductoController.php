@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Producto;
 use App\Http\Requests\StoreProductoRequest;
 use App\Http\Requests\UpdateProductoRequest;
+use App\Models\Vendedor;
 
 class ProductoController extends Controller
 {
@@ -15,6 +16,7 @@ class ProductoController extends Controller
      */
     public function index()
     {
+//        return response()->json(Vendedor::find(2)->productos, 200);
         return response()->json(Producto::all(), 200);
     }
 
