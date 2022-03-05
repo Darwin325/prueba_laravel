@@ -27,7 +27,7 @@ class VentaController extends ApiController
                     'valor_unitario' => $producto->precio,
                     'iva' => $producto->iva,
                     'cantidad_vendido' => $catidad_vendido,
-                    'valor_total' => ($producto->precio_con_iva() * $catidad_vendido)
+                    'valor_total' => $producto->valor_total()
                 ];
             });
             $valor_total_venta = round($productos->sum('valor_total'), 2);
@@ -99,7 +99,7 @@ class VentaController extends ApiController
                 'valor_unitario' => $producto->precio,
                 'iva' => $producto->iva,
                 'cantidad_vendido' => $catidad_vendido,
-                'valor_total' => ($producto->precio_con_iva() * $catidad_vendido)
+                'valor_total' => $producto->valor_total()
             ];
         });
         $valor_total_venta = round($productos->sum('valor_total'), 2);

@@ -50,8 +50,15 @@ class Producto extends Model
         );
     }
 
+    // Aplicar el iva a cada uno de los precios
     public function precio_con_iva()
     {
         return round(($this->precio * (($this->iva / 100) + 1)), 2);
+    }
+
+    // Obtener el valor total de todos los productos del mismo tipo vendidos
+    public function valor_total()
+    {
+        return $this->precio_con_iva() * $this->vendido->cantidad;
     }
 }
