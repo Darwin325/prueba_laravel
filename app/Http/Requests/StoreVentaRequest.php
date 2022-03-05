@@ -13,7 +13,7 @@ class StoreVentaRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,8 @@ class StoreVentaRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'cliente_id' => 'required|exists:App\Models\Cliente,id',
+            'productos' => 'required|array',
         ];
     }
 }

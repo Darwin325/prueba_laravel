@@ -23,7 +23,8 @@ class Producto extends Model
 
     public function ventas()
     {
-        return $this->belongsToMany(Venta::class)->withTimestamps();
+        return $this->belongsToMany(Venta::class)
+            ->withTimestamps()->withPivot('cantidad');
     }
 
     public function nombre(): Attribute

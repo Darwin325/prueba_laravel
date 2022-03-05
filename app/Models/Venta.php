@@ -20,6 +20,7 @@ class Venta extends Model
 
     public function productos()
     {
-        return $this->belongsToMany(Producto::class)->withTimestamps();
+        return $this->belongsToMany(Producto::class)
+            ->withTimestamps()->withPivot('cantidad')->as('vendido');
     }
 }

@@ -21,8 +21,14 @@ class DatabaseSeeder extends Seeder
         $this->call(ProductoSeeder::class);
         Venta::factory(15)->create()
             ->each(function ($venta) {
-                $productos = Producto::all()->random(mt_rand(1,3))->pluck('id');
-                $venta->productos()->attach($productos);
+                $productos = Producto::all()->random(mt_rand(1,3));
+                $productos->map(function ($producto) use($venta) {
+                    $venta->productos()->attach($producto->id, [
+                        'cantidad' => mt_rand(1, $producto->cantidad)
+                    ]);
+                });
+                $venta->numero_venta = $venta->id;
+                $venta->save();
             });
     }
 }

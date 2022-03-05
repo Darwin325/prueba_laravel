@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Producto;
 use App\Models\Venta;
 use App\Http\Requests\StoreVentaRequest;
 use App\Http\Requests\UpdateVentaRequest;
+use Illuminate\Support\Facades\DB;
 
 class VentaController extends ApiController
 {
@@ -18,17 +20,20 @@ class VentaController extends ApiController
         $ventas = Venta::with('productos')->get()->map(function ($venta) {
             $cliente = $venta->cliente;
             $productos = $venta->productos->map(function ($producto){
+                $catidad_vendido = $producto->vendido->cantidad;
                 return [
+                    'producto_id' => $producto->id,
                     'nombre' => $producto->nombre,
-                    'cantidad' => $producto->cantidad,
                     'valor_unitario' => $producto->precio,
                     'iva' => $producto->iva,
-                    'valor_total' => $producto->precio_con_iva()
+                    'cantidad_vendido' => $catidad_vendido,
+                    'valor_total' => ($producto->precio_con_iva() * $catidad_vendido)
                 ];
             });
             $valor_total_venta = round($productos->sum('valor_total'), 2);
             return [
-                'numero_venta' => $venta->id,
+                'venta_id' => $venta->id,
+                'numero_venta' => $venta->numero_venta,
                 'cliente_id' => $cliente->id,
                 'cliente' => $cliente->name,
                 'telefono' => $cliente->telefono,
@@ -44,11 +49,38 @@ class VentaController extends ApiController
      * Store a newly created resource in storage.
      *
      * @param  \App\Http\Requests\StoreVentaRequest  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(StoreVentaRequest $request)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $cantida_registros = DB::table('ventas')->count('*');
+            $venta = Venta::create([
+                'cliente_id' => $request->cliente_id,
+                'numero_venta' => $cantida_registros + 1
+            ]);
+            // Productos a vender
+            $productos_venta = $request->productos;
+            foreach ($productos_venta as $producto) {
+                // Producto a modificar si se puede hacer la venta
+                $prod_cambiar = Producto::find($producto['producto_id']);
+                if ($producto['cantidad'] > $prod_cambiar->cantidad) {
+                    DB::rollBack();
+                    return $this->errorResponse([
+                        'mensaje' => "Cantidad insuficiente en producto_id: {$prod_cambiar->id}"
+                    ], 402);
+                }
+                $prod_cambiar->cantidad -= $producto['cantidad'];
+                $prod_cambiar->save();
+            }
+            $venta->productos()->attach($productos_venta);
+            DB::commit();
+            return $this->showOne($venta);
+            }catch (\Exception $e){
+                DB::rollBack();
+                return $this->errorResponse($e->getMessage(), 500);
+            }
     }
 
     /**
@@ -60,18 +92,21 @@ class VentaController extends ApiController
     public function show(Venta $venta)
     {
         $productos = $venta->productos->map(function ($producto){
+            $catidad_vendido = $producto->vendido->cantidad;
             return [
+                'producto_id' => $producto->id,
                 'nombre' => $producto->nombre,
-                'cantidad' => $producto->cantidad,
                 'valor_unitario' => $producto->precio,
                 'iva' => $producto->iva,
-                'valor_total' => $producto->precio_con_iva()
+                'cantidad_vendido' => $catidad_vendido,
+                'valor_total' => ($producto->precio_con_iva() * $catidad_vendido)
             ];
         });
         $valor_total_venta = round($productos->sum('valor_total'), 2);
         $cliente = $venta->cliente;
         $venta = [
-            'numero_venta' => $venta->id,
+            'venta_id' => $venta->id,
+            'numero_venta' => $venta->numero_venta,
             'cliente_id' => $cliente->id,
             'cliente' => $cliente->name,
             'telefono' => $cliente->telefono,
@@ -91,7 +126,13 @@ class VentaController extends ApiController
      */
     public function update(UpdateVentaRequest $request, Venta $venta)
     {
-        //
+        try {
+            $venta->productos()->update([
+                'producto_id' => $request->p
+            ]);
+        }catch (\Exception $e){
+            return $this->errorResponse($e->getMessage(), 500);
+        }
     }
 
     /**
