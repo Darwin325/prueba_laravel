@@ -6,6 +6,7 @@ use App\Models\Producto;
 use App\Models\Venta;
 use App\Http\Requests\StoreVentaRequest;
 use App\Http\Requests\UpdateVentaRequest;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
 class VentaController extends ApiController
@@ -64,7 +65,7 @@ class VentaController extends ApiController
             $productos_venta = $request->productos;
             foreach ($productos_venta as $producto) {
                 // Producto a modificar si se puede hacer la venta
-                $prod_cambiar = Producto::find($producto['producto_id']);
+                $prod_cambiar = Producto::findOrFail($producto['producto_id']);
                 if ($producto['cantidad'] > $prod_cambiar->cantidad) {
                     DB::rollBack();
                     return $this->errorResponse([
@@ -115,24 +116,6 @@ class VentaController extends ApiController
             'productos' => $productos
         ];
         return response()->json(['data' => $venta], 200);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateVentaRequest  $request
-     * @param  \App\Models\Venta  $venta
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateVentaRequest $request, Venta $venta)
-    {
-        try {
-            $venta->productos()->update([
-                'producto_id' => $request->p
-            ]);
-        }catch (\Exception $e){
-            return $this->errorResponse($e->getMessage(), 500);
-        }
     }
 
     /**

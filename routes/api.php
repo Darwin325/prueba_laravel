@@ -23,4 +23,4 @@ Route::resource('productos', \App\Http\Controllers\ProductoController::class)
     ->except(['create', 'edit']);
 
 Route::resource('ventas', \App\Http\Controllers\VentaController::class)
-    ->except(['create', 'edit']);
+    ->except(['create', 'edit', 'update']);

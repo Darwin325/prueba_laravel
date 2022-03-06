@@ -59,6 +59,6 @@ class Producto extends Model
     // Obtener el valor total de todos los productos del mismo tipo vendidos
     public function valor_total()
     {
-        return $this->precio_con_iva() * $this->vendido->cantidad;
+        return round($this->precio_con_iva() * $this->vendido->cantidad, 2);
     }
 }
