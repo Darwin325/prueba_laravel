@@ -8,12 +8,12 @@ Cambiar a localhost la variable `APP_URL=http://localhost:8000`
 Para ejecutar consulta a una base de datos configurar el archivo
 .env con una base de datos respectiva creada.
 
-#####Ejecutar los comandos para el manejo de la base de datos
+##### Ejecutar los comandos para el manejo de la base de datos
 - Crear las tablas: `php artisan migrate`
 - Ejecutar los seeder para tener datos de prueba: `php artisan db:seed`
 
 ***
-###Rutas de la api:
+### Rutas de la api:
 ##### 1. Rutas para productos
 - Consultar la lista de productos método **GET**:
 `/api/productos`
